@@ -10,7 +10,11 @@ else
     GLFLAG="-lGL"
 fi
 
-CFLAGS="-I../src -Wall -std=c11 -pedantic `sdl2-config --libs` $GLFLAG -lm -O3 -g"
+SDL_CFLAGS=`sdl2-config --cflags 2>/dev/null | sed -E 's/-I([^[:space:]]+)\/SDL2/-I\\1/g'`
+SDL_LDFLAGS=`sdl2-config --libs 2>/dev/null`
 
-gcc main.c renderer.c ../src/microui.c $CFLAGS
+CFLAGS="-I../src -Wall -std=c11 -pedantic -DGL_GLEXT_PROTOTYPES $SDL_CFLAGS $GLFLAG -lm -O3 -g"
+LDFLAGS="$SDL_LDFLAGS"
+
+gcc main.c renderer.c ../src/microui.c $CFLAGS $LDFLAGS
 
